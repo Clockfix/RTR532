@@ -1,20 +1,14 @@
 -----------------------------
--- Author 
--- Date
--- Project name
--- Module name
+-- Imants Pulkstenis 
+-- 10.02.2020
+-- RTR532 PS1
+-- PS1
 --
--- Detailed module description
---
---
---
---
---
---
+-- Task 2 for Problem set #1 – My first VHDL code
 --
 -- Revision:
 -- A - initial design
--- B - 
+-- 
 --
 -----------------------------
 
@@ -31,7 +25,7 @@ port
 	a 			: in std_Logic;
 	b 			: in std_logic;
 	c 			: in std_logic;
-	y1 		: out std_logic;
+	y1 			: out std_logic;
 	y2			: out std_logic
 );
 end ps01q;
@@ -43,29 +37,17 @@ architecture behavioral of ps01q is
 	signal SIG_INTERNAL : std_logic;
 
 
-begin -- jums jaalabo tikai taalaakais.
-
+begin 
 
 	--gate one
-	SIG_INTERNAL <= A and B;
-
+	SIG_INTERNAL <= A xor B;
 	
 	--gate two
-	Y2 <= C and SIG_INTERNAL;
-	
-	
+	Y2 <= C xnor SIG_INTERNAL;
+		
 	--gate three
-	Y1 <= A and B;
-	
-	
-	--logic gate izsauksanas keywordi:
-	-- not
-	-- and, nand,
-	-- or, xor, nor, xnor
-	
-	
-	
-
+	Y1 <= A nor B; -- in assigment gate three is not ?????
+		
 
 end behavioral;
 
