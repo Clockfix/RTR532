@@ -46,7 +46,7 @@ begin
 	Y2 <= C xnor SIG_INTERNAL;
 		
 	--gate three
-	Y1 <= A nor B; -- in assigment gate three is not ?????
+	Y1 <= A nor B; -- in assignment gate three is not ?????
 		
 
 end behavioral;
