@@ -1,0 +1,2 @@
+# RTR532
+RTU kurss RTR532 19/20 
