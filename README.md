@@ -4,4 +4,4 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/clockfix/RTR532?style=plastic)
 [![made-with-latex](https://img.shields.io/badge/Made%20with-LaTeX-1f425f.svg?style=plastic)](https://www.latex-project.org/)
 # RTR532
-RTU kurss RTR532 19/20 
+Rīgas Tehniskā Universitāte kurss RTR532 19/20 pavasaris
