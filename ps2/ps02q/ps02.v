@@ -1,0 +1,68 @@
+/////////////////////////////
+// Author - Imants Pulkstenis
+// Date - 16.02.2020
+// Project name - PS02
+// Module name - Top module for PS02
+//
+// Detailed module description:
+//
+// Includes an existing (my or somebody else’s) 
+// design entity (another vhdl or verlilog file) 
+// in other design entity
+//
+//
+//
+//
+// Revision:
+// A - initial design
+// B - VHDL code are replaced with Verilog
+//
+/////////////////////////////
+
+
+//define connections to outside
+module ps02 #( parameter
+	data_width = 32
+)(
+	input                       clk, 
+	input                       rst,
+	output  [data_width - 1:0]  R,
+	output                      flag);
+);
+
+    //define inside of the module
+	//define inside use signals
+	wire [data_width - 1:0]     A;
+	wire [data_width - 1:0]     B;
+	wire [3:0]                  op;
+	
+	//component declaration for A, B, op signal generator
+    //port map for A, B, op signal generator
+name_of_unit #(
+        .data_width(data_width)
+    ) ps02_siggen (
+        .clk(clk),
+	    .rst(rst),
+	    .A(A),
+	    .B(B),
+	    .op(op)
+);
+
+	//component declaration for alu  (TASK 1)
+    //port map for ALU (TASK 1)
+
+name_of_alu_unit #(
+        .data_width(data_width)
+    ) alu (
+        .clk(clk),
+	    .rst(rst),
+	    .A(A),
+	    .B(B),
+	    .op(op),
+        .R(R),
+        .flag(flag)
+);
+	
+
+endmodule
+
