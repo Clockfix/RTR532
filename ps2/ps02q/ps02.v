@@ -26,16 +26,16 @@ module ps02 #( parameter
 )(
 	input                               clk, 
 	input                               rst,
-	output signed [data_width - 1:0]    R,
+	output        [data_width - 1:0]    R,
 	output                              flag
 );
 
     //define inside of the module
     //define inside use signals
-	wire signed     [data_width - 1:0]      A;
-	wire signed     [data_width - 1:0]      B;
-	wire    			 [3:0]                   op;
-	
+	wire      [data_width - 1:0]      A;
+	wire      [data_width - 1:0]      B;
+	wire      [3:0]                   op;
+			
     //component declaration for A, B, op signal generator
     //port map for A, B, op signal generator
 ps02_siggen #(

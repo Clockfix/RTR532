@@ -30,53 +30,56 @@ module ps02_siggen #( parameter
 	//define inside use signals
 	
 	reg [3:0]  op_cnt = 'h0;
+    reg [data_width - 1:0]   reg_A = 'h0;
+    reg [data_width - 1:0]   reg_B = 'h0;
 
-    reg [data_width - 1 : 0] A_list [15:0] = 
-	{
-		-'d15, //sub
-		-'d14, //add
-		'h0000DEAD, //nand
-		'h0000BEEF, //and
-		'h0000ABCD, //or
-		'h0000EFAD, //nor
-		'h00001279, //xor
-		'h00000310, //not a
-		'h00003010, //not b
-		-'d1,//incr B
-		'd0,//incr A
-		'd0,//sub A
-		'd0,//sub B
-		'h00000F0F,//sll A
-		'h00000000,//sll B
-		'h00001234//noop
-    };
+always@* begin
+    case(op_cnt)
+        4'h0: reg_A <= -'d15; //sub
+		4'h1: reg_A <= -'d14; //add
+		4'h2: reg_A <= 'h0000DEAD; //nand
+		4'h3: reg_A <= 'h0000BEEF; //and
+		4'h4: reg_A <= 'h0000ABCD; //or
+		4'h5: reg_A <= 'h0000EFAD; //nor
+		4'h6: reg_A <= 'h00001279; //xor
+		4'h7: reg_A <= 'h00000310; //not a
+		4'h8: reg_A <= 'h00003010; //not b
+		4'h9: reg_A <= -'d1;//incr B
+		4'hA: reg_A <= 'd0;//incr A
+		4'hb: reg_A <= 'd0;//sub A
+		4'hc: reg_A <= 'd0;//sub B
+		4'hd: reg_A <= 'h00000F0F;//sll A
+		4'he: reg_A <= 'h00000000;//sll B
+		4'hf: reg_A <= 'h00001234;//noop
+    endcase
 
+    case(op_cnt)
+        4'h0: reg_B <= 'd37; //sub
+		4'h1: reg_B <= -'d999; //add
+		4'h2: reg_B <= 'h00001221; //nand
+		4'h3: reg_B <= 'h00000FF0; //and
+		4'h4: reg_B <= 'h0000F00F; //or
+		4'h5: reg_B <= 'h00008754; //nor
+		4'h6: reg_B <= 'h0000ADBF; //xor
+		4'h7: reg_B <= 'h0000FECD; //not a
+		4'h8: reg_B <= 'h0000CCDC; //not b
+		4'h9: reg_B <= 'd0;//incr B
+		4'ha: reg_B <= -'d1;//incr A
+		4'hb: reg_B <= 'd0;//sub A
+		4'hc: reg_B <= 'd0;//sub B
+		4'hd: reg_B <= 'h0000F0F0;//sll A
+		4'he: reg_B <= 'h0000ABAB;//sll B
+		4'hf: reg_B <= 'h00004321; //noop
+    endcase
 
-	reg [data_width - 1 : 0] V_list [15:0] = 
-	{
-		'd37, //sub
-		-'d999, //add
-		'h00001221, //nand
-		'h00000FF0, //and
-		'h0000F00F, //or
-		'h00008754, //nor
-		'h0000ADBF, //xor
-		'h0000FECD, //not a
-		'h0000CCDC, //not b
-		'd0,//incr B
-		-'d1,//incr A
-		'd0,//sub A
-		'd0,//sub B
-		'h0000F0F0,//sll A
-		'h0000ABAB,//sll B
-		'h00004321 //noop
-	};
+end
 	
 
 	//define the operation of the module!
 
-assign	A = A_list(op_cnt);
-assign	B = B_list(op_cnt);
+assign	A = reg_A;
+assign	B = reg_B;
+assign  op = op_cnt;
 		
 always@(posedge clk)
 	begin
