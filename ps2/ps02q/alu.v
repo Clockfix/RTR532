@@ -23,11 +23,11 @@
 //Entity declaration [part 3 of the Verilog file].
 module alu #( parameter
 	data_width = 32
-)
+)(
 	input                                   clk,
 	input signed        [data_width - 1:0]  A,
 	input signed        [data_width - 1:0]  B,
-	input unsigned      [3:0]               op,
+	input               [3:0]               op,
 	output signed       [data_width - 1:0]  R,
 	output                                  flag);
 
@@ -62,7 +62,7 @@ always@(posedge clk) begin
     endcase
 end
 
-assign R    = reg_R(data_width - 1:0);
+assign R    = reg_R[data_width - 1:0];
 assign flag = (reg_R[data_width]==1'b1) ? 1'b1 : 1'b0; //optional
 
 endmodule
