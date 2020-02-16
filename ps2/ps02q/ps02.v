@@ -24,40 +24,39 @@
 module ps02 #( parameter
 	data_width = 32
 )(
-	input                       clk, 
-	input                       rst,
-	output  [data_width - 1:0]  R,
-	output                      flag
+	input                               clk, 
+	input                               rst,
+	output signed [data_width - 1:0]    R,
+	output                              flag
 );
 
     //define inside of the module
 	 //define inside use signals
-	wire [data_width - 1:0]     A;
-	wire [data_width - 1:0]     B;
-	wire [3:0]                  op;
+	wire signed     [data_width - 1:0]      A;
+	wire signed     [data_width - 1:0]      B;
+	wire unsigned   [3:0]                   op;
 	
-	 //component declaration for A, B, op signal generator
+    //component declaration for A, B, op signal generator
     //port map for A, B, op signal generator
 ps02_siggen #(
         .data_width(data_width)
     ) name_of_unit (
         .clk(clk),
-	     .rst(rst),
-	     .A(A),
-	     .B(B),
-	     .op(op)
+        .rst(rst),
+        .A(A),
+        .B(B),
+        .op(op)
 );
 
-	 //component declaration for alu  (TASK 1)
+    //component declaration for alu  (TASK 1)
     //port map for ALU (TASK 1)
-
 alu #(
         .data_width(data_width)
     ) name_of_alu_unit (
         .clk(clk),
-	     .A(A),
-	     .B(B),
-	     .op(op),
+        .A(A),
+        .B(B),
+        .op(op),
         .R(R),
         .flag(flag)
 );
