@@ -34,7 +34,7 @@ module ps02 #( parameter
 	 //define inside use signals
 	wire signed     [data_width - 1:0]      A;
 	wire signed     [data_width - 1:0]      B;
-	wire unsigned   [3:0]                   op;
+	wire    			 [3:0]                   op;
 	
     //component declaration for A, B, op signal generator
     //port map for A, B, op signal generator
