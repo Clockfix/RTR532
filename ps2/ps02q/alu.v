@@ -45,76 +45,76 @@ always@(posedge clk) begin
             4'h0: begin 
                     reg_R   <= A - B;
                     if ( B > A ) begin   
-                        reg_flag = 'b1;
+                        reg_flag <= 'b1;
                     end 
-                    else reg_flag = 'b0;
+                    else reg_flag <= 'b0;
                   end
             4'h1: begin
                     reg_R   <= A + B;
                     if ((A + B) > reg_max_pos ) begin   
-                        reg_flag = 'b1;
+                        reg_flag <= 'b1;
                     end 
-                    else reg_flag = 'b0;
+                    else reg_flag <= 'b0;
                   end
             4'h2: begin
                     reg_R   <= ~(A & B);
-                    reg_flag = 'b0;
+                    reg_flag <= 'b0;
                   end
             4'h3: begin
                     reg_R   <= A & B;
-                    reg_flag = 'b0;
+                    reg_flag <= 'b0;
                   end
             4'h4: begin
                     reg_R   <= A | B;
-                    reg_flag = 'b0;
+                    reg_flag <= 'b0;
                   end
             4'h5: begin
                     reg_R   <= ~(A | B);
-                    reg_flag = 'b0;
+                    reg_flag <= 'b0;
                   end
             4'h6: begin
                     reg_R   <= A ^ B;
-                    reg_flag = 'b0;
+                    reg_flag <= 'b0;
                   end
             4'h7: begin
                     reg_R   <= ~A;
-                    reg_flag = 'b0;
+                    reg_flag <= 'b0;
                   end
             4'h8: begin
                     reg_R   <= ~B;
-                    reg_flag = 'b0;
+                    reg_flag <= 'b0;
                   end
             4'h9: begin 
                     reg_R   <= B + 1;
-                    if ( B == reg_max_pos ) reg_flag = 'b1;
+                    if ( B == reg_max_pos ) reg_flag <= 'b1;
                   end
             4'ha: begin 
                     reg_R   <= A + 1;
-                    if (  reg_max_pos ) reg_flag = 'b1;
+                    if (  reg_max_pos ) reg_flag <= 'b1;
                   end
             4'hb: begin 
                     reg_R   <= A - 1;
-                    if ( A == {1'b1, ~reg_max_pos } ) reg_flag = 'b1;
+                    if ( A == {1'b1, ~reg_max_pos } ) reg_flag <= 'b1;
                   end
             4'hc: begin
                     reg_R   <= B - 1;     
-                    if ( B == {1'b1, ~reg_max_pos }  ) reg_flag = 'b1;
+                    if ( B == {1'b1, ~reg_max_pos }  ) reg_flag <= 'b1;
                   end  
             4'hd: begin
                     reg_R   <= A << 1;    // <<	Shift Left, Logical (fill with zero)
-                    reg_flag = 'b0;       // <<< Shift Left, Arithmetic (keep sign)
+                    reg_flag <= 'b0;       // <<< Shift Left, Arithmetic (keep sign)
                   end
             4'he: begin 
                     reg_R   <= A >> 1;    // >>	Shift Right, Logical (fill with zero)
-                    reg_flag = 'b0;       // >>> Shift Right, Arithmetic (keep sign)
+                    reg_flag <= 'b0;       // >>> Shift Right, Arithmetic (keep sign)
                   end
             4'hf: begin
                     reg_R   <= 'b0;     
-                    reg_flag = 'b0;
+                    reg_flag <= 'b0;
                   end  
             default: begin
                     reg_R   <= 'b0;     
-                    reg_flag = 'b0;
+                    reg_flag <= 'b0;
                   end
     endcase
 end
