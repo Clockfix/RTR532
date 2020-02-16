@@ -14,6 +14,7 @@
 // Revision:
 // A - initial design
 // B - VHDL code are replaced with Verilog
+// C - ALU logic defined in module
 //
 /////////////////////////////
 
