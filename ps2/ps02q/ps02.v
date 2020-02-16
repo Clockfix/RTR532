@@ -31,7 +31,7 @@ module ps02 #( parameter
 );
 
     //define inside of the module
-	 //define inside use signals
+    //define inside use signals
 	wire signed     [data_width - 1:0]      A;
 	wire signed     [data_width - 1:0]      B;
 	wire    			 [3:0]                   op;

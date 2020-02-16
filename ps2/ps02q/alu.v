@@ -26,45 +26,101 @@ module alu #( parameter
 	data_width = 32
 )(
 	input                                   clk,
-	input signed        [data_width - 1:0]  A,
-	input signed        [data_width - 1:0]  B,
+	input               [data_width - 1:0]  A,
+	input               [data_width - 1:0]  B,
 	input               [3:0]               op,
-	output signed       [data_width - 1:0]  R,
+	output              [data_width - 1:0]  R,
 	output                                  flag);
 
 
 //define inside of the module
 //define inside use signals and components [part 4 of the VHDL file]
 
-reg signed [data_width:0] reg_R  = 'h0; // width is 33 to capture overflow or underflow                 
-
+reg [data_width :0] reg_R  = 'h0; // width is 33 to capture overflow or underflow                 
+reg reg_flag = 'b0;
+reg [data_width - 2 : 0 ] reg_max_pos = 'b1;            // maximum
 //define the operation of the module! [part 5 of the VHDL file]
 always@(posedge clk) begin
     case (op)        
-            4'h0: reg_R   <= A - B;
-            4'h1: reg_R   <= A + B;
-            4'h2: reg_R   <= ~(A & B);
-            4'h3: reg_R   <= A & B;
-            4'h4: reg_R   <= A | B;
-            4'h5: reg_R   <= ~(A | B);
-            4'h6: reg_R   <= A ^ B;
-            4'h7: reg_R   <= ~A;
-            4'h8: reg_R   <= ~B;
-            4'h9: reg_R   <= B + 1;
-            4'ha: reg_R   <= A + 1;
-            4'hb: reg_R   <= A - 1;
-            4'hc: reg_R   <= B - 1;
-            4'hd: reg_R   <= A << 1;    // <<	Shift Left, Logical (fill with zero)
-                                        // <<<	Shift Left, Arithmetic (keep sign)
-            4'he: reg_R   <= A >> 1;    // >>	Shift Right, Logical (fill with zero)
-                                        // >>>	Shift Right, Arithmetic (keep sign)
-            4'hf: reg_R   <= 'b0;  
-            default: reg_R <= 'b0;
+            4'h0: begin 
+                    reg_R   <= A - B;
+                    if ( B > A ) begin   
+                        reg_flag = 'b1;
+                    end 
+                    else reg_flag = 'b0;
+                  end
+            4'h1: begin
+                    reg_R   <= A + B;
+                    if ((A + B) > reg_max_pos ) begin   
+                        reg_flag = 'b1;
+                    end 
+                    else reg_flag = 'b0;
+                  end
+            4'h2: begin
+                    reg_R   <= ~(A & B);
+                    reg_flag = 'b0;
+                  end
+            4'h3: begin
+                    reg_R   <= A & B;
+                    reg_flag = 'b0;
+                  end
+            4'h4: begin
+                    reg_R   <= A | B;
+                    reg_flag = 'b0;
+                  end
+            4'h5: begin
+                    reg_R   <= ~(A | B);
+                    reg_flag = 'b0;
+                  end
+            4'h6: begin
+                    reg_R   <= A ^ B;
+                    reg_flag = 'b0;
+                  end
+            4'h7: begin
+                    reg_R   <= ~A;
+                    reg_flag = 'b0;
+                  end
+            4'h8: begin
+                    reg_R   <= ~B;
+                    reg_flag = 'b0;
+                  end
+            4'h9: begin 
+                    reg_R   <= B + 1;
+                    if ( B == reg_max_pos ) reg_flag = 'b1;
+                  end
+            4'ha: begin 
+                    reg_R   <= A + 1;
+                    if (  reg_max_pos ) reg_flag = 'b1;
+                  end
+            4'hb: begin 
+                    reg_R   <= A - 1;
+                    if ( A == {1'b1, ~reg_max_pos } ) reg_flag = 'b1;
+                  end
+            4'hc: begin
+                    reg_R   <= B - 1;     
+                    if ( B == {1'b1, ~reg_max_pos }  ) reg_flag = 'b1;
+                  end  
+            4'hd: begin
+                    reg_R   <= A << 1;    // <<	Shift Left, Logical (fill with zero)
+                    reg_flag = 'b0;       // <<< Shift Left, Arithmetic (keep sign)
+                  end
+            4'he: begin 
+                    reg_R   <= A >> 1;    // >>	Shift Right, Logical (fill with zero)
+                    reg_flag = 'b0;       // >>> Shift Right, Arithmetic (keep sign)
+                  end
+            4'hf: begin
+                    reg_R   <= 'b0;     
+                    reg_flag = 'b0;
+                  end  
+            default: begin
+                    reg_R   <= 'b0;     
+                    reg_flag = 'b0;
+                  end
     endcase
 end
 
 assign R    = reg_R[data_width - 1:0];
-assign flag = (reg_R[data_width]==1'b1) ? 1'b1 : 1'b0; //optional
+assign flag = reg_flag; //optional
 
 endmodule
 
