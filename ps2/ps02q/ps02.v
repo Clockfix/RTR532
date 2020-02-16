@@ -27,38 +27,37 @@ module ps02 #( parameter
 	input                       clk, 
 	input                       rst,
 	output  [data_width - 1:0]  R,
-	output                      flag);
+	output                      flag
 );
 
     //define inside of the module
-	//define inside use signals
+	 //define inside use signals
 	wire [data_width - 1:0]     A;
 	wire [data_width - 1:0]     B;
 	wire [3:0]                  op;
 	
-	//component declaration for A, B, op signal generator
+	 //component declaration for A, B, op signal generator
     //port map for A, B, op signal generator
-name_of_unit #(
+ps02_siggen #(
         .data_width(data_width)
-    ) ps02_siggen (
+    ) name_of_unit (
         .clk(clk),
-	    .rst(rst),
-	    .A(A),
-	    .B(B),
-	    .op(op)
+	     .rst(rst),
+	     .A(A),
+	     .B(B),
+	     .op(op)
 );
 
-	//component declaration for alu  (TASK 1)
+	 //component declaration for alu  (TASK 1)
     //port map for ALU (TASK 1)
 
-name_of_alu_unit #(
+alu #(
         .data_width(data_width)
-    ) alu (
+    ) name_of_alu_unit (
         .clk(clk),
-	    .rst(rst),
-	    .A(A),
-	    .B(B),
-	    .op(op),
+	     .A(A),
+	     .B(B),
+	     .op(op),
         .R(R),
         .flag(flag)
 );
