@@ -43,10 +43,10 @@ always@(posedge clk) begin
             4'h0: reg_R   <= (A - B);
             4'h1: reg_R   <= (A + B);
 
-            4'h2: reg_R[data_width - 1:0]   <= (A ~& B);
+            4'h2: reg_R[data_width - 1:0]   <= ~(A & B);
             4'h3: reg_R[data_width - 1:0]   <= (A & B);
             4'h4: reg_R[data_width - 1:0]   <= (A | B);
-            4'h5: reg_R[data_width - 1:0]   <= (A ~| B);
+            4'h5: reg_R[data_width - 1:0]   <= ~(A | B);
             4'h6: reg_R[data_width - 1:0]   <= (A ^ B);
             4'h7: reg_R[data_width - 1:0]   <= ~A;
             4'h8: reg_R[data_width - 1:0]   <= ~B;
