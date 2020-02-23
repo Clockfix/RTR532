@@ -60,15 +60,14 @@ module smart_tl_ctl #( parameter
 
 //-------------Internal Constants---------------------------
 localparam      [2:0]   IDLE            = 'h0,
-                        MR_GREEN_A      = 'h1,
-                        MR_GREEN_B      = 'h2,
+                        MR_GREEN_1      = 'h1,
+                        MR_GREEN_2      = 'h2,
                         MR_YELLOW       = 'h3,
                         SR_GREEN        = 'h4,
                         SR_YELLOW       = 'h5;
 
 //-------------Internal signals and components--------------
-reg [2:0]               r_state = IDLE, 
-                        r_next = MR_GREEN_A;
+reg [2:0]               r_state = IDLE;
 reg [4:0]               r_cnt = 'b0;
 reg [1:0]               r_MR_ctl  = 'b0,
                         r_SR_ctl  = 'b0;
@@ -85,20 +84,20 @@ always@(posedge clk) begin
         IDLE:  begin
             r_MR_ctl <= 'b00;
             r_SR_ctl <= 'b00;
-            r_state <= MR_GREEN_A;
+            r_state <= MR_GREEN_1;
             r_cnt <= 'd0;
         end
-        MR_GREEN_A:  begin
+        MR_GREEN_1:  begin
             r_MR_ctl <= 'b11;
             r_SR_ctl <= 'b01;
             if (r_cnt >= MR_GREEN_TIME) begin   
                 if (MR_cars == 0) begin
                     r_cnt <= 0;
-                    r_state <= MR_GREEN_A;
+                    r_state <= MR_GREEN_1;
                     end
                 else if (MR_cars < PARAMETER) begin
                     r_cnt <= 0;
-                    r_state <= MR_GREEN_B;
+                    r_state <= MR_GREEN_2;
                     end
                 else if (MR_cars >= PARAMETER) begin
                     r_cnt <= 0;
@@ -106,11 +105,11 @@ always@(posedge clk) begin
                     end  
                 end
             else begin
-                r_state <= MR_GREEN_A;
+                r_state <= MR_GREEN_1;
                 r_cnt <= r_cnt + 1;
                 end
         end
-        MR_GREEN_B:  begin
+        MR_GREEN_2:  begin
             r_MR_ctl <= 'b11;
             r_SR_ctl <= 'b01;
             if (r_cnt >= MR_GREEN_TIME) begin
@@ -119,7 +118,7 @@ always@(posedge clk) begin
                 end
             else begin
                 r_cnt <= r_cnt + 1;
-                r_state <= MR_GREEN_B;
+                r_state <= MR_GREEN_2;
                 end
         end
         MR_YELLOW:  begin
@@ -132,7 +131,6 @@ always@(posedge clk) begin
             else begin
                 r_cnt <= r_cnt + 1;
                 r_state <= MR_YELLOW;
-                
                 end
         end
         SR_GREEN:  begin
@@ -152,7 +150,7 @@ always@(posedge clk) begin
             r_SR_ctl <= 'b10;
             if (r_cnt >= YELLOW_TIME) begin
                 r_cnt = 0;
-                r_state <= MR_GREEN_A;
+                r_state <= MR_GREEN_1;
                 end
             else begin
                 r_cnt <= r_cnt + 1;
@@ -164,7 +162,6 @@ always@(posedge clk) begin
     end
     else begin
         r_state <= IDLE;
-
         r_MR_ctl <= 'b00;
         r_SR_ctl <= 'b00;
         r_cnt <= 0;

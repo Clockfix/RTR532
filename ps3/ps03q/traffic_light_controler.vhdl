@@ -80,45 +80,78 @@ begin
 process(clk)
 begin
 	if rising_edge(clk) then
-        if rst = '1' then
+        if rst = '0' then
 			state <= "000";
 			cnt <= x"00";
         else
         case state is
             when "000" => -- lights off secs
-                state <= "001";
                 cnt <= 0;
                 state <= "001";
-            when "001" => -- MR green light 30 secs
-                if cnt < 5 then 
-                cnt <= cnt + 1;
-                state <= "001";
-                else 
-                cnt <= 0;
-                state <= "010";
+                MR_ctl <= "00";
+	            SR_ctl <= "00";    
+            when "001" => -- MR green light 30 ns
+                MR_ctl <= "11";
+                SR_ctl <= "01"; 
+                if cnt >= 30 then 
+                    if MR_cars == 0 then
+                        cnt <= 0;
+                        state <= "001";
+                    else if MR_cars < PARAMETER then
+                        cnt <= 0;
+                        state <= "010";
+                    else 
+                        cnt <= 0;
+                        state <= "011";
+                        end if; 
+                    end if; 
+                else      
+                    cnt <= cnt + 1;
+                    state <= "001";
                 end if;				
-
-            when "010" => -- MR green light 30 secs
+            when "010" => -- MR green light 30 ns
+                MR_ctl <= "11";
+                SR_ctl <= "01";         
                 if cnt < 30 then 
-                cnt <= cnt + 1;
-                state <= "10";
+                    cnt <= cnt + 1;
+                    state <= "010";
+                else      
+                    cnt <= 0;
+                    state <= "011";
+                end if;					
+            when "011" => -- MR yellow light 3 ns
+                MR_ctl <= "10";
+                SR_ctl <= "10";        
+                if cnt < 3 then 
+                    cnt <= cnt + 1;
+                    state <= "011";
                 else 
-                cnt <= 0;
-                state <= "11";
+                    cnt <= 0;
+                    state <= "100";
                 end if;	
-
-            when "11" => --yellow light 5 secs
-                if cnt < 5 then 
-                cnt <= cnt + 1;
-                state <= "11";
+            when "100" => -- SR green light 10 ns
+                MR_ctl <= "01";
+                SR_ctl <= "11"; 
+                if cnt < 10 then 
+                    cnt <= cnt + 1;
+                    state <= "100";
                 else 
-                cnt <= 0;
-                state <= "00";
-                end if;	
-                
+                    cnt <= 0;
+                    state <= "101";
+                end if;
+            when "101" => -- SR yellow light 3 ns
+                MR_ctl <= "10";
+                SR_ctl <= "10";         
+                if cnt < 3 then 
+                    cnt <= cnt + 1;
+                    state <= "101";
+                else 
+                    cnt <= 0;
+                    state <= "001";
+                end if;	           
             when others =>
                 cnt <= 0;
-                state <= "00";				
+                state <= "000";				
             
         end case;
         end if;
