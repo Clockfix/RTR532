@@ -46,7 +46,7 @@
 //
 ///////////////////////////////////////////////////////////////////
 
-module smart_tl_ctl #( parameter
+module trafic_light_controller #( parameter
     PARAMETER	 = 45,
     MR_GREEN_TIME = 30-1, 
     SR_GREEN_TIME = 10-1,
