@@ -48,9 +48,9 @@
 
 module smart_tl_ctl #( parameter
     PARAMETER	 = 45,
-    MR_GREEN_TIME = 30, 
-    SR_GREEN_TIME = 10,
-    YELLOW_TIME = 3
+    MR_GREEN_TIME = 30-1, 
+    SR_GREEN_TIME = 10-1,
+    YELLOW_TIME = 3-1
 )(
 	input                                   clk,
 	input                                   rst,
@@ -60,110 +60,115 @@ module smart_tl_ctl #( parameter
 
 //-------------Internal Constants---------------------------
 localparam      [2:0]   IDLE            = 'h0,
-                        MR_GREEN_1      = 'h1,
-                        MR_GREEN_2      = 'h2,
+                        MR_GREEN_A      = 'h1,
+                        MR_GREEN_B      = 'h2,
                         MR_YELLOW       = 'h3,
                         SR_GREEN        = 'h4,
-                        MR_YELLOW       = 'h5;
+                        SR_YELLOW       = 'h5;
 
 //-------------Internal signals and components--------------
 reg [2:0]               r_state = IDLE, 
-                        r_next = IDLE;
+                        r_next = MR_GREEN_A;
 reg [4:0]               r_cnt = 'b0;
-reg [1:0]               MR_ctl  = 'b0,
-                        SR_ctl  = 'b0;
+reg [1:0]               r_MR_ctl  = 'b0,
+                        r_SR_ctl  = 'b0;
 
 //------------ assignning combionational logic--------------
 
 assign MR_ctl = r_MR_ctl;
 assign SR_ctl = r_SR_ctl;
 
-//---------state register sequential always block-----------
-always @(posedge clk ) begin
-    if (rst) 
-        r_state <= r_next; 
-    else 
-        r_state <= IDLE;
-end
 //----next state & outputs, combinational always block------
 always@(posedge clk) begin
+    if (rst) begin
     case(r_state)
         IDLE:  begin
-            r_MR_ctl = 'b00;
-            r_SR_ctl = 'b00;
-            r_next = MR_GREEN_1;
-            r_cnt = 'd0;
+            r_MR_ctl <= 'b00;
+            r_SR_ctl <= 'b00;
+            r_state <= MR_GREEN_A;
+            r_cnt <= 'd0;
         end
-        MR_GREEN_1:  begin
-            r_MR_ctl = 'b11;
-            r_SR_ctl = 'b00;
-            if (r_cnt < MR_GREEN_TIME) begin
-                r_cnt = r_cnt + 1;
-                r_next = MR_GREEN_1;
+        MR_GREEN_A:  begin
+            r_MR_ctl <= 'b11;
+            r_SR_ctl <= 'b01;
+            if (r_cnt >= MR_GREEN_TIME) begin   
+                if (MR_cars == 0) begin
+                    r_cnt <= 0;
+                    r_state <= MR_GREEN_A;
+                    end
+                else if (MR_cars < PARAMETER) begin
+                    r_cnt <= 0;
+                    r_state <= MR_GREEN_B;
+                    end
+                else if (MR_cars >= PARAMETER) begin
+                    r_cnt <= 0;
+                    r_state <= MR_YELLOW;
+                    end  
                 end
-            else if (r_cnt >= MR_GREEN_TIME) & (MR_cars == 0) begin
-                r_cnt = 0;
-                r_next = MR_GREEN_1;
-                end
-            else if (r_cnt >= MR_GREEN_TIME) & (MR_cars < PARAMETER) begin
-                r_cnt = 0;
-                r_next = MR_GREEN_2;
-                end
-            else if (r_cnt >= MR_GREEN_TIME) & (MR_cars >= PARAMETER) begin
-                r_cnt = 0;
-                r_next = MR_YELLOW;
+            else begin
+                r_state <= MR_GREEN_A;
+                r_cnt <= r_cnt + 1;
                 end
         end
-        MR_GREEN_2:  begin
-            r_MR_ctl = 'b11;
-            r_SR_ctl = 'b00;
-            if (r_cnt < MR_GREEN_TIME) begin
-                r_cnt = r_cnt + 1;
-                r_next = MR_GREEN_2;
+        MR_GREEN_B:  begin
+            r_MR_ctl <= 'b11;
+            r_SR_ctl <= 'b01;
+            if (r_cnt >= MR_GREEN_TIME) begin
+                r_cnt <= 0;
+                r_state <= MR_YELLOW;
                 end
-            else if (r_cnt >= MR_GREEN_TIME) begin
-                r_cnt = 0;
-                r_next = MR_YELLOW;
+            else begin
+                r_cnt <= r_cnt + 1;
+                r_state <= MR_GREEN_B;
                 end
         end
         MR_YELLOW:  begin
-            r_MR_ctl = 'b10;
-            r_SR_ctl = 'b10;
-            if (r_cnt < YELLOW_TIME) begin
-                r_cnt = r_cnt + 1;
-                r_next = MR_YELLOW;
+            r_MR_ctl <= 'b10;
+            r_SR_ctl <= 'b10;
+            if (r_cnt >= YELLOW_TIME) begin
+                r_cnt <= 0;
+                r_state <= SR_GREEN;
                 end
-            else if (r_cnt >= YELLOW_TIME) begin
-                r_cnt = 0;
-                r_next = SR_GREEN;
+            else begin
+                r_cnt <= r_cnt + 1;
+                r_state <= MR_YELLOW;
+                
                 end
         end
         SR_GREEN:  begin
-            r_MR_ctl = 'b00;
-            r_SR_ctl = 'b11;
-            if (r_cnt < SR_GREEN_TIME) begin
-                r_cnt = r_cnt + 1;
-                r_next = SR_GREEN;
+            r_MR_ctl <= 'b01;
+            r_SR_ctl <= 'b11;
+            if (r_cnt >= SR_GREEN_TIME) begin
+                r_cnt <= 0;
+                r_state <= SR_YELLOW;
                 end
-            else if (r_cnt >= SR_GREEN_TIME) begin
-                r_cnt = 0;
-                r_next = MR_YELLOW;
-                end
-        end
-        MR_YELLOW:  begin
-            r_MR_ctl = 'b10;
-            r_SR_ctl = 'b10;
-            if (r_cnt < YELLOW_TIME) begin
-                r_cnt = r_cnt + 1;
-                r_next = MR_YELLOW;
-                end
-            else if (r_cnt >= YELLOW_TIME) begin
-                r_cnt = 0;
-                r_next = MR_GREEN_1;
+            else begin
+                r_cnt <= r_cnt + 1;
+                r_state <= SR_GREEN;
                 end
         end
-        default: r_next <= IDLE;          // on error
+        SR_YELLOW:  begin
+            r_MR_ctl <= 'b10;
+            r_SR_ctl <= 'b10;
+            if (r_cnt >= YELLOW_TIME) begin
+                r_cnt = 0;
+                r_state <= MR_GREEN_A;
+                end
+            else begin
+                r_cnt <= r_cnt + 1;
+                r_state <= SR_YELLOW;
+                end
+        end
+        default: r_state <= IDLE;         // on error
     endcase
+    end
+    else begin
+        r_state <= IDLE;
+
+        r_MR_ctl <= 'b00;
+        r_SR_ctl <= 'b00;
+        r_cnt <= 0;
+    end
 
 end
 
