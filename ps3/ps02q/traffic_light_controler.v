@@ -47,7 +47,7 @@
 ///////////////////////////////////////////////////////////////////
 
 module smart_tl_ctl #( parameter
-	PARAMETER = 45,
+    PARAMETER	 = 45,
     MR_GREEN_TIME = 30, 
     SR_GREEN_TIME = 10,
     YELLOW_TIME = 3
@@ -105,9 +105,13 @@ always@(posedge clk) begin
                 r_cnt = 0;
                 r_next = MR_GREEN_1;
                 end
-            else if (r_cnt >= MR_GREEN_TIME) & (MR_cars != 0) begin
+            else if (r_cnt >= MR_GREEN_TIME) & (MR_cars < PARAMETER) begin
                 r_cnt = 0;
                 r_next = MR_GREEN_2;
+                end
+            else if (r_cnt >= MR_GREEN_TIME) & (MR_cars >= PARAMETER) begin
+                r_cnt = 0;
+                r_next = MR_YELLOW;
                 end
         end
         MR_GREEN_2:  begin
