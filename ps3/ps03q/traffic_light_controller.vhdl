@@ -52,7 +52,7 @@ use ieee.std_logic_1164.all;	--always use this library
 use ieee.numeric_std.all;		--use this library if arithmetic required
 
 --Entity declaration [part 3 of the VHDL file].
-entity smart_tl_ctl is
+entity traffic_light_controller is
     generic
     (
         PARAMETER : integer := 45

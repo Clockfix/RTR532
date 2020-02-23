@@ -26,7 +26,7 @@
 ///////////////////////////////////////////////////////////////////
 
 //UUT module
-`include "traffic_light_controler.v"
+`include "traffic_light_controller.v"
 
 // 1GHz clock -> 1ns period
 // 50% duty cycle 0.5ns HIGH and 0.5ns LOW
@@ -48,7 +48,7 @@ integer ii=0;
 always #0.5 clk <= ~clk;
 
 //-----Unit Under test---------------
-smart_tl_ctl #(
+traffic_light_controller #(
         .PARAMETER(45)
 ) unit_under_test (
         .clk(clk),
