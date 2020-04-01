@@ -26,12 +26,40 @@ module dds_vhdl#( parameter
 	output  [phase_width - 1:0]     phase_out,
 	output  [data_width  - 1:0]     signal_out);
 
-// define inside of the module
+
+
+reg [phase_width - 1:0]  r_phase_incr = 'd0;
+reg [phase_width - 1:0]  r_phase_out = 'd0;
+
+
+// Phase increment – determines output frequency
+always@(posedge clk)begin
+	if (rst) begin
+		r_phase_incr <= 0; end
+	else begin 
+			r_phase_incr <= phase_incr; end
+end
+
+// Phase accumulator – the «counter»
+always@(posedge clk)begin
+	if (rst) begin
+		r_phase_out <= 0; end
+	else begin 
+		r_phase_out <= phase_out + phase_incr; end
+end
+
+// Look-up table – memory where waveform is stored
 lookuptable lookuptable (
-	.in(),
-	.out());
+	.phase( // mux
+			(control== 0) ? 4'b0 : 
+			(control== 1) ? {2'b0, phase_out[phase_width - 3:0] } : 
+			(control== 2) ? {1'b0, phase_out[phase_width - 2:0] } : 
+			phase_out  
+			// end of MUX
+			),
+	.sin(signal_out),
+	.cos());
 
-
-
+assign phase_out = r_phase_out;
 
 endmodule

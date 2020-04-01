@@ -1,67 +1,78 @@
-/////////////////////////////
+///////////////////////////////////////////////////////////////// 
 // Author - Imants Pulkstenis
-// Date - 16.02.2020
-// Project name - PS02
-// Module name - Test bench for PS02 project Top module 
+// Date - 01.04.2020
+// Project name - PS04
+// Module name - test bench of DDS (direct digital synthesis)
 //
 // Detailed module description:
-//
 // This module generete clk signal for 
-// top module of ps02 project
+// top module of dds_vhdl project
 // The test is executed using Icarus Verilog!
 // 
 // The result can be evaluated in GTKwave application.  
 // Code:
-//     iverilog -o output.vvp ps02_tb.v && vvp output.vvp
+//     iverilog -o output.vvp dds_vhdl_tb.v && vvp output.vvp
 //     gtkwave -f wave.vcd
 //
 // Revision:
 // A - initial design
-// 
+// B - 
+// C - 
 //
-/////////////////////////////
+///////////////////////////////////////////////////////////////////
 
 //sub modules
-`include "alu.v"
-`include "ps02_siggen.v"
+`include "lookuptable.v"
 //top module
-`include "ps02.v"
+`include "dds_vhdl.v"
 
 
 //define module and connections to outside
-module ps02_tb ();
+module dds_vhdl_tb #( parameter
+    phase_width = 4,
+	data_width	= 8
+)();
 
 //define inside use signals
 	
 reg clk = 1'b0;
 reg rst = 1'b0;
+reg [1:0]   r_control = 'd3;
+reg [phase_width - 1:0] r_phase_incr = 'd1;
 
 //---------Test script----------------
 // 50% duty cycle clock
 always #0.5 clk <= ~clk;
 
 //-----Unit Under test---------------
-ps02 #(
-        .data_width(32)
+dds_vhdl #(
+        .data_width(8)
 ) unit_under_test (
         .clk(clk),
         .rst(rst),
-        .R(),
-        .flag()
+        .control(r_control),
+        .phase_incr(r_phase_incr),
+        .phase_out(),
+        .signal_out()
 );
 
+
 //---------Test--------------------
-initial
-  begin
+initial begin
     rst = 1;
     #10;
     rst = 0;
     #100
+    r_control = 2;
+    #100
+    r_control = 1;
+    #100
+    r_control = 0;
+    #100
     $finish();
-  end
+end
     
-  initial 
-  begin 
+initial begin 
     $display(" ");
     $display("----------------------------------------------");
     $display("          Starting Testbench...");
@@ -69,13 +80,8 @@ initial
     $dumpvars(0);
     $display("----------------------------------------------");
     $display(" ");
-  end
+end
 
 
 
 endmodule
-
-
-
-
-
