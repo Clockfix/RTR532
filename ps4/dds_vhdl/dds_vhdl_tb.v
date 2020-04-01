@@ -26,6 +26,10 @@
 //top module
 `include "dds_vhdl.v"
 
+// 100MHz clock input from top module
+// 50% duty cycle 5ns HIGH and 5ns LOW
+//`timescale [time unit] / [time precision]
+`timescale 10 ns / 1ns
 
 //define module and connections to outside
 module dds_vhdl_tb #( parameter
@@ -62,6 +66,15 @@ initial begin
     rst = 1;
     #10;
     rst = 0;
+    #100
+    r_control = 2;
+    #100
+    r_control = 1;
+    #100
+    r_control = 0;
+    #100
+    r_phase_incr = 'd2;
+    r_control = 3;
     #100
     r_control = 2;
     #100
