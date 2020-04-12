@@ -13,7 +13,8 @@
 //
 // Revision:
 // A - initial design
-// B - 
+// B - Correct timmers and 7-segment display.
+//     Added UP/DOWN and START/STOP function
 // 
 //
 /////////////////////////////
@@ -26,12 +27,18 @@ module top (
     output  [3:0]   an, 
     output          dp,  
     input   [3:0]   sw,
-    input           btnC     // reset
+    input           btnC,     // reset
+    input           btnU,     // UP counting
+    input           btnD,     // DOWN counting
+    input           btnL      // start/stop 
     );
 
 //------internal wires and registers--------
  
-wire  clk16Hz, clk1kHz, w_reset;    
+wire    clk16Hz, clk1kHz, 
+        w_reset, w_up, 
+        w_down, w_direction, 
+        w_start, w_enable;  
 wire    [15:0]  w_counter;
 
 
@@ -43,6 +50,8 @@ assign led = w_counter;
 counter counter(
     .clk(clk16Hz),
     .reset(w_reset),
+    .direction(w_direction),
+    .enable(1'b1),
     .max(sw),
     .counter(w_counter)
 );
@@ -63,12 +72,52 @@ clock_divider #(
     .clk_out(clk16Hz)
 );
 
-
 debounce_switch debounce_switch_reset(
     .clk(clk),
     .i_switch(btnC),
     .o_switch(w_reset)
 );
+
+debounce_switch debounce_up(
+    .clk(clk),
+    .i_switch(btnU),
+    .o_switch(w_up)
+);
+
+debounce_switch debounce_down(
+    .clk(clk),
+    .i_switch(btnD),
+    .o_switch(w_down)
+);
+
+debounce_switch debounce_start(
+    .clk(clk),
+    .i_switch(btnL),
+    .o_switch(w_start)
+);
+
+// flip_flop flip_flop(
+//     .clk(clk),
+//     .rst(1'b1),
+//     .t(w_start),
+//     .q(w_enable)
+// );
+
+sr_latch sr_latch(
+    .C(clk),
+    .S(~w_up),
+    .R(~w_down),
+    .Q(w_direction),
+    .notQ()
+);
+
+// sr_latch start_latch(
+//     .C(clk),
+//     .S(~w_start),
+//     .R(~w_start&w_enable),
+//     .Q(w_enable),
+//     .notQ()
+// );
 
 bin_7segment bin_7segment(
     .clk(clk1kHz),  // clock working with 10kHz

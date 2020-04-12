@@ -29,43 +29,42 @@
 `include "7segment.v"
 `include "debounce_switch.v"
 `include "counter.v"
+`include "sr_latch.v"
+`include "flip_flop.v"
 
 
 //top module
 `include "top.v"
 
-module top_tb#( parameter
-    WAIT = 1,
-    WAIT_WIDTH = 2,
-    SPEED = 2,
-     //memory parameters
-    ADDR_WIDTH = 17, //19, // 
-    DATA_WIDTH = 12, 
-    DEPTH =  307_200//76_800, // 
-)();
+module top_tb();
 
 reg clk = 1'b0;
 reg reset = 1'b0;
 reg [3:0]  sw = 4'b0000;
+reg start = 1'b0;
+reg up = 1'b0;
 
 // 50% duty cycle clock
 always #0.5 clk <= ~clk;
 
-
-reg RsRx;
-wire RsTx;
-
 top Test_Unit(
     .clk(clk),
     .sw(sw),
+    .btnU(up),
+    .btnD(),
+    .btnL(start),
     .btnC(reset)
 );
 
 initial begin
+    start = 1;
+    up = 1;
     #1_000_000;
     $display("*");
     #1_000_000;
     $display("*");
+    start = 0;
+    up = 0;
     #1_000_000;
     $display("*");
     #1_000_000;

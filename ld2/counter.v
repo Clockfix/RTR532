@@ -20,20 +20,29 @@
 module counter  (
     input               clk,
     input               reset,
+    input               enable,
+    input               direction,
     input       [3:0]   max,
-    output      [15:0]   counter);
+    output      [15:0]  counter);
 
 always@(posedge clk) begin
     if (reset == 'b1) begin
-            r_adder <= 'b0;
+            r_counter <= 'b0;
         end
     else begin
-            if (r_adder >= max )begin
-                r_counter <= r_counter + 1;
-                r_adder <= 0;
-            end 
-            else begin
-                r_adder <= r_adder + 1;
+        if(enable)begin
+                if (r_adder >= max )begin
+                    r_adder <= 0;
+                    if (direction) begin
+                        r_counter <= r_counter + 1;
+                    end
+                    else begin
+                        r_counter <= r_counter - 1;
+                    end
+                end 
+                else begin
+                    r_adder <= r_adder + 1;                    
+                end
             end
         end
 end
