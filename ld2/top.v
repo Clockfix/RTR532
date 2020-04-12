@@ -20,12 +20,12 @@
 
 module top (
     input           clk,
-    output  [15:0]  led,
+    output  [15:0]   led,
     // 7 segment
     output  [6:0]   seg, 
     output  [3:0]   an, 
     output          dp,  
-    input   [15:0]   sw,
+    input   [3:0]   sw,
     input           btnC     // reset
     );
 
@@ -33,6 +33,7 @@ module top (
  
 wire  clk16Hz, clk1kHz, w_reset;    
 wire    [15:0]  w_counter;
+
 
 //------assign outputs----------------------
 assign led = w_counter;
@@ -42,11 +43,12 @@ assign led = w_counter;
 counter counter(
     .clk(clk16Hz),
     .reset(w_reset),
+    .max(sw),
     .counter(w_counter)
 );
 
 clock_divider #(
-    .DIVIDER(1_000),
+    .DIVIDER(50_000),  // 50000 * 10ns = 500us
     .WIDTH(24)
 ) clock_1kHz_gen (
     .clk(clk),
@@ -54,8 +56,8 @@ clock_divider #(
 );
 
 clock_divider #(
-    .DIVIDER(5_000*625),
-    .WIDTH(22)
+    .DIVIDER(3_125_000),  // 3125000 * 10ns =  31.25ms
+    .WIDTH(24)
 ) clock_16Hz_gen (
     .clk(clk),
     .clk_out(clk16Hz)
@@ -69,8 +71,8 @@ debounce_switch debounce_switch_reset(
 );
 
 bin_7segment bin_7segment(
-    .clk(clk1kHz),   // clock working with 10kHz
-    .in(w_counter),        // input
+    .clk(clk1kHz),  // clock working with 10kHz
+    .in(w_counter), // input
     .seg(seg),      // individual segments of number
     .an(an),        // anode to select character
     .dp(dp)         // dot on 7segment display

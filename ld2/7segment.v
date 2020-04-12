@@ -8,7 +8,7 @@
 //
 // This module 16bit input transforms 
 // in 7-segment display induvidual segments
-// as outputs. Input clock is 10kHz and it 
+// as outputs. Input clock is 1kHz and it 
 // drives common anode for 7-segment display
 //
 //
@@ -19,7 +19,7 @@
 //
 /////////////////////////////
 module bin_7segment(
-    input           clk,  // clock working with 10kHz
+    input           clk,  // clock working with 1kHz
     input   [15:0]  in,   // input
     output  [6:0]   seg,  // individual segments of number
     output  [3:0]   an,   // anode to select character
@@ -34,7 +34,8 @@ parameter [SIZE-1:0]    ONE     = 2'b00,
                         FOUR    = 2'b11;
 
 reg [SIZE-1:0] state=ONE, next=TWO;
-reg [3:0] nibble = 'b0 ;
+reg [6:0] r_nibble = 'b0 ;
+reg [3:0] r_an = 'b0 ;
 
 //---------State register sequential always block-----------
 always @(posedge clk ) begin
@@ -45,107 +46,98 @@ end
 always@(posedge clk)begin
   case(state)
     ONE : begin 
-        next <= TWO;
-        nibble <= in[3:0]; 
+        next <= TWO; 
+		r_an <= 4'b0001;
+        case (in[3:0]) 
+			4'h0 : r_nibble <= 7'b0111111;
+			4'h1 : r_nibble <= 7'b0000110;
+			4'h2 : r_nibble <= 7'b1011011;
+			4'h3 : r_nibble <= 7'b1001111;
+			4'h4 : r_nibble <= 7'b1100110;
+			4'h5 : r_nibble <= 7'b1101101;
+			4'h6 : r_nibble <= 7'b1111101;
+			4'h7 : r_nibble <= 7'b0000111;
+			4'h8 : r_nibble <= 7'b1111111;
+			4'h9 : r_nibble <= 7'b1101111;
+			4'ha : r_nibble <= 7'b1110111;
+			4'hb : r_nibble <= 7'b1111100;
+			4'hc : r_nibble <= 7'b0111001;
+			4'hd : r_nibble <= 7'b1011110;
+			4'he : r_nibble <= 7'b1111001;
+			4'hf : r_nibble <= 7'b1110001;
+		endcase
     end
     TWO : begin
         next <= THREE;
-        nibble <= in[7:4];
+		r_an <= 4'b0010;
+        case (in[7:4]) 
+			4'h0 : r_nibble <= 7'b0111111;
+			4'h1 : r_nibble <= 7'b0000110;
+			4'h2 : r_nibble <= 7'b1011011;
+			4'h3 : r_nibble <= 7'b1001111;
+			4'h4 : r_nibble <= 7'b1100110;
+			4'h5 : r_nibble <= 7'b1101101;
+			4'h6 : r_nibble <= 7'b1111101;
+			4'h7 : r_nibble <= 7'b0000111;
+			4'h8 : r_nibble <= 7'b1111111;
+			4'h9 : r_nibble <= 7'b1101111;
+			4'ha : r_nibble <= 7'b1110111;
+			4'hb : r_nibble <= 7'b1111100;
+			4'hc : r_nibble <= 7'b0111001;
+			4'hd : r_nibble <= 7'b1011110;
+			4'he : r_nibble <= 7'b1111001;
+			4'hf : r_nibble <= 7'b1110001;
+		endcase
     end
     THREE : begin 
         next <= FOUR;
-        nibble <= in[11:8];
+		r_an <= 4'b0100;
+        case (in[11:8]) 
+			4'h0 : r_nibble <= 7'b0111111;
+			4'h1 : r_nibble <= 7'b0000110;
+			4'h2 : r_nibble <= 7'b1011011;
+			4'h3 : r_nibble <= 7'b1001111;
+			4'h4 : r_nibble <= 7'b1100110;
+			4'h5 : r_nibble <= 7'b1101101;
+			4'h6 : r_nibble <= 7'b1111101;
+			4'h7 : r_nibble <= 7'b0000111;
+			4'h8 : r_nibble <= 7'b1111111;
+			4'h9 : r_nibble <= 7'b1101111;
+			4'ha : r_nibble <= 7'b1110111;
+			4'hb : r_nibble <= 7'b1111100;
+			4'hc : r_nibble <= 7'b0111001;
+			4'hd : r_nibble <= 7'b1011110;
+			4'he : r_nibble <= 7'b1111001;
+			4'hf : r_nibble <= 7'b1110001;
+		endcase
     end
     FOUR : begin 
         next <= ONE;
-        nibble <= in[15:12];
+		r_an <= 4'b1000;
+        case (in[15:12]) 
+			4'h0 : r_nibble <= 7'b0111111;
+			4'h1 : r_nibble <= 7'b0000110;
+			4'h2 : r_nibble <= 7'b1011011;
+			4'h3 : r_nibble <= 7'b1001111;
+			4'h4 : r_nibble <= 7'b1100110;
+			4'h5 : r_nibble <= 7'b1101101;
+			4'h6 : r_nibble <= 7'b1111101;
+			4'h7 : r_nibble <= 7'b0000111;
+			4'h8 : r_nibble <= 7'b1111111;
+			4'h9 : r_nibble <= 7'b1101111;
+			4'ha : r_nibble <= 7'b1110111;
+			4'hb : r_nibble <= 7'b1111100;
+			4'hc : r_nibble <= 7'b0111001;
+			4'hd : r_nibble <= 7'b1011110;
+			4'he : r_nibble <= 7'b1111001;
+			4'hf : r_nibble <= 7'b1110001;
+		endcase
     end
   endcase
 end
 
-  assign seg[6] = ( nibble == 4'h2 ||
-                    nibble == 4'h3 ||
-                    nibble == 4'h4 ||
-                    nibble == 4'h5 ||
-                    nibble == 4'h6 ||
-                    nibble == 4'h8 ||
-                    nibble == 4'h9 ||
-                    nibble == 4'hA ||
-                    nibble == 4'hB ||
-                    nibble == 4'hD ||
-                    nibble == 4'hE ||
-                    nibble == 4'hF ) ? 1'b0 : 1'b1;
-  assign seg[5] = ( nibble == 4'h0 ||
-                    nibble == 4'h4 ||
-                    nibble == 4'h5 ||
-                    nibble == 4'h6 ||
-                    nibble == 4'h8 ||
-                    nibble == 4'h9 ||
-                    nibble == 4'hA ||
-                    nibble == 4'hB ||
-                    nibble == 4'hC ||
-                    nibble == 4'hE ||
-                    nibble == 4'hF ) ? 1'b0 : 1'b1;
-  assign seg[4] = ( nibble == 4'h0 ||
-                    nibble == 4'h2 ||
-                    nibble == 4'h6 ||
-                    nibble == 4'h8 ||
-                    nibble == 4'hA ||
-                    nibble == 4'hB ||
-                    nibble == 4'hC ||
-                    nibble == 4'hD ||
-                    nibble == 4'hE ||
-                    nibble == 4'hF ) ? 1'b0 : 1'b1;
-  assign seg[3] = ( nibble == 4'h0 ||
-                    nibble == 4'h2 ||
-                    nibble == 4'h3 ||
-                    nibble == 4'h5 ||
-                    nibble == 4'h6 ||
-                    nibble == 4'h8 ||
-                    nibble == 4'h9 ||
-                    nibble == 4'hB ||
-                    nibble == 4'hC ||
-                    nibble == 4'hD ||
-                    nibble == 4'hE ) ? 1'b0 : 1'b1;
-  assign seg[2] = ( nibble == 4'h0 ||
-                    nibble == 4'h1 ||
-                    nibble == 4'h3 ||
-                    nibble == 4'h4 ||
-                    nibble == 4'h5 ||
-                    nibble == 4'h6 ||
-                    nibble == 4'h7 ||
-                    nibble == 4'h8 ||
-                    nibble == 4'h9 ||
-                    nibble == 4'hA ||
-                    nibble == 4'hB ||
-                    nibble == 4'hD ) ? 1'b0 : 1'b1;
-  assign seg[1] = ( nibble == 4'h0 ||
-                    nibble == 4'h1 ||
-                    nibble == 4'h2 ||
-                    nibble == 4'h3 ||
-                    nibble == 4'h4 ||
-                    nibble == 4'h7 ||
-                    nibble == 4'h8 ||
-                    nibble == 4'h9 ||
-                    nibble == 4'hA ||
-                    nibble == 4'hD ) ? 1'b0 : 1'b1;
-  assign seg[0] = ( nibble == 4'h0 ||
-                    nibble == 4'h2 ||
-                    nibble == 4'h3 ||
-                    nibble == 4'h5 ||
-                    nibble == 4'h6 ||
-                    nibble == 4'h7 ||
-                    nibble == 4'h8 ||
-                    nibble == 4'h9 ||
-                    nibble == 4'hA ||
-                    nibble == 4'hC ||
-                    nibble == 4'hE ||
-                    nibble == 4'hF) ? 1'b0 : 1'b1;
-  assign dp = 1'b1;     //dot
-
-  assign an[0] = (state==ONE)   ? 1'b0 : 1'b1;   
-  assign an[1] = (state==TWO)   ? 1'b0 : 1'b1;
-  assign an[2] = (state==THREE) ? 1'b0 : 1'b1;
-  assign an[3] = (state==FOUR)  ? 1'b0 : 1'b1;
+  assign seg = ~r_nibble;	// inverse active LOW
+  assign dp = 1'b1;         //dot
+  assign an = ~r_an;		// inverse active LOW
   
 endmodule

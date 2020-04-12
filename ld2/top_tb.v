@@ -25,7 +25,7 @@
 `timescale 10 ns / 1ns
 
 //sub modules
-`include "clock_divider_param.v"
+`include "clock_divider.v"
 `include "7segment.v"
 `include "debounce_switch.v"
 `include "counter.v"
@@ -46,6 +46,7 @@ module top_tb#( parameter
 
 reg clk = 1'b0;
 reg reset = 1'b0;
+reg [3:0]  sw = 4'b0000;
 
 // 50% duty cycle clock
 always #0.5 clk <= ~clk;
@@ -56,10 +57,25 @@ wire RsTx;
 
 top Test_Unit(
     .clk(clk),
-    .btnC(reset) 
+    .sw(sw),
+    .btnC(reset)
 );
 
 initial begin
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
     #1_000_000;
     $display("*");
     #1_000_000;

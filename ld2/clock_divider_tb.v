@@ -20,9 +20,9 @@
 // `timescale [time unit] / [time precision]
 `timescale 10 ps / 1 ps
 
-`include "clock_divider_param.v"
+`include "clock_divider.v"
 
-module clock_divider_param_tb ();
+module clock_divider_tb ();
 
 reg clk = 1'b0;
 wire enable;

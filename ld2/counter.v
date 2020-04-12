@@ -20,19 +20,26 @@
 module counter  (
     input               clk,
     input               reset,
-    output      [15:0]  counter);
+    input       [3:0]   max,
+    output      [15:0]   counter);
 
 always@(posedge clk) begin
     if (reset == 'b1) begin
-        r_counter <= 'b0;
+            r_adder <= 'b0;
         end
     else begin
-        r_counter <= r_counter + 1;
+            if (r_adder >= max )begin
+                r_counter <= r_counter + 1;
+                r_adder <= 0;
+            end 
+            else begin
+                r_adder <= r_adder + 1;
+            end
         end
 end
 
-
-reg     [15:0]      r_counter = 'b0;
+reg     [15:0]       r_adder = 'b0;
+reg     [15:0]       r_counter = 'b0;
 
 assign counter = r_counter;
 
