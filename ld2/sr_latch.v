@@ -6,7 +6,7 @@
 //
 // Detailed module description:
 //
-// This is SR latch for swoching
+// This is SR latch for swiching
 // between UP or DOWN counting
 //
 // Revision:
@@ -16,13 +16,19 @@
 //
 /////////////////////////////
 module sr_latch(
-        input wire S, R, C,
-        output reg Q, notQ
+        input wire clk, up, down,
+        output wire out
     );
 
-always@(S, R, C, Q, notQ)
-    if(C) begin
-        Q <= (~R & Q) | S;
-        Q <= (~S & Q) | R;
-    end
+reg r_out = 1'b0;
+
+always@(posedge clk) begin
+    case ({up,down})
+        2'b01 :  r_out <= 0;
+        2'b10 :  r_out <= 1;
+        default : r_out <= r_out;
+    endcase
+end
+assign out = r_out;
+
 endmodule

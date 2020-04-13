@@ -34,10 +34,10 @@ always@(posedge clk) begin
                 if (r_adder >= max )begin
                     r_adder <= 0;
                     if (direction) begin
-                        r_counter <= r_counter + 1;
+                        r_counter <= r_counter - 1;
                     end
                     else begin
-                        r_counter <= r_counter - 1;
+                        r_counter <= r_counter + 1;
                     end
                 end 
                 else begin

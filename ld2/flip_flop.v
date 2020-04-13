@@ -16,17 +16,15 @@
 /////////////////////////////
 
 module flip_flop (   
-    input clk,
-    input rst,
-    input t,
-    output reg q);
- 
-always @ (posedge clk) begin
-    if (!rst) 
-      q <= 0;
-    else if (t)
-        q <= ~q;
-    else
-        q <= q;
-  end
+    input start,
+    output out);
+
+reg r_out = 1'b0;
+
+always@(posedge start) begin
+    r_out <= ~r_out;
+end
+
+assign out = r_out;
+
 endmodule

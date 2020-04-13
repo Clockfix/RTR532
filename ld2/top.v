@@ -51,7 +51,7 @@ counter counter(
     .clk(clk16Hz),
     .reset(w_reset),
     .direction(w_direction),
-    .enable(1'b1),
+    .enable(w_enable),
     .max(sw),
     .counter(w_counter)
 );
@@ -96,28 +96,17 @@ debounce_switch debounce_start(
     .o_switch(w_start)
 );
 
-// flip_flop flip_flop(
-//     .clk(clk),
-//     .rst(1'b1),
-//     .t(w_start),
-//     .q(w_enable)
-// );
-
-sr_latch sr_latch(
-    .C(clk),
-    .S(~w_up),
-    .R(~w_down),
-    .Q(w_direction),
-    .notQ()
+sr_latch up_down_latch(
+    .clk(clk),
+    .up(~w_up),
+    .down(~w_down),
+    .out(w_direction)
 );
 
-// sr_latch start_latch(
-//     .C(clk),
-//     .S(~w_start),
-//     .R(~w_start&w_enable),
-//     .Q(w_enable),
-//     .notQ()
-// );
+flip_flop start_stop_flipflop(
+    .start(w_start),
+    .out(w_enable)
+);
 
 bin_7segment bin_7segment(
     .clk(clk1kHz),  // clock working with 10kHz
