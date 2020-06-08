@@ -2,7 +2,7 @@
 -- Author - Imants Pulkstenis
 -- Date - 04.06.2020
 -- Project name - Lab work No3
--- Module name - dds_vhdl
+-- Module name - sin_gen
 --
 -- Detailed module description:
 -- DDS sinusoidal signal generator
@@ -19,11 +19,13 @@ use ieee.numeric_std.all;		--use this library if arithmetic required
 
 
 --define connections to outside
-entity dds_vhdl is
+entity sin_gen is
 generic
 (
 	phase_width 						: integer := 9;
-	data_width							: integer := 16
+	data_width							: integer := 16;
+	sampling_f							: integer := 4535;	-- 100MHz/22050
+	clock_cnt_width						: integer := 13
 );
 port
 (
@@ -31,12 +33,13 @@ port
 	rst									: in std_logic;	--rst
 	phase_incr							: in std_Logic_vector(phase_width - 1 downto 0); --"frequency"
 	phase_out							: out std_Logic_vector(phase_width - 1 downto 0);
-	signal_out							: out std_Logic_vector(data_width - 1 downto 0)
+	signal_out							: out std_Logic_vector(data_width - 1 downto 0);
+	fs_out								: out std_logic --output sampling clock for debuging
 );
-end dds_vhdl;
+end sin_gen;
 
 --define inside of the module
-architecture behavioral of dds_vhdl is
+architecture behavioral of sin_gen is
 
 	--define inside use signals
 	type rom_table is array ( 0 to 2**phase_width - 1) of std_logic_vector(data_width - 1 downto 0);
@@ -560,22 +563,37 @@ architecture behavioral of dds_vhdl is
 	-- phase counter
 	signal phase_cnt : unsigned(phase_width - 1 downto 0) := (others => '0');
 	
-
-
+	-- clock divider counter - for generating 22050Hz  fs clock
+	signal clock_cnt : unsigned(clock_cnt_width - 1 downto 0) := (others => '0');
+	-- clock output
+	signal clock_out : std_logic := '0';
 
 begin	--define the operation of the module!
 	
 	--phase output for debugging
 	phase_out <= std_logic_Vector(phase_cnt);
-	
+	--clcock output for debugiung
+	fs_out <= std_logic(clock_out);
+
 	--phase counter
 	process(clk)
 	begin
 		if rising_edge(clk) then
 			if rst = '1' then		
 				phase_cnt <= (others => '0');
+				clock_cnt <= (others => '0');
 			else
-				phase_cnt <= unsigned(phase_cnt) + unsigned(phase_incr);
+				if  clock_cnt <= sampling_f then
+					clock_cnt <= unsigned(clock_cnt) + 1;
+					--if clock_cnt = (sampling_f-1)/2 then
+					--	clock_out <= not clock_out;
+					--end if;
+				else
+					phase_cnt <= unsigned(phase_cnt) + unsigned(phase_incr);
+					clock_cnt <= (others => '0');
+					clock_out <= not clock_out;
+				end if;
+				
 			end if;
 		end if;
 	end process;
