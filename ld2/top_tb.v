@@ -40,8 +40,8 @@ module top_tb();
 
 reg clk = 1'b0;
 reg reset = 1'b0;
-reg [3:0]  sw = 4'b0000;
-reg start = 1'b0;
+reg [3:0]  sw = 4'b0001;
+reg start = 1'b1;
 reg up = 1'b0;
 
 // 50% duty cycle clock
@@ -57,14 +57,31 @@ top Test_Unit(
 );
 
 initial begin
-    start = 1;
-    up = 1;
     #1_000_000;
     $display("*");
     #1_000_000;
     $display("*");
-    start = 0;
-    up = 0;
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    start = 1'b0;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
+    #1_000_000;
+    $display("*");
     #1_000_000;
     $display("*");
     #1_000_000;
