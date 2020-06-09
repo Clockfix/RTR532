@@ -41,10 +41,10 @@ ylabel('Magnitude (dB)')
 legend('Response FIR_1','Response FIR_2','f_1','f_2', '-20dB target', 'Location','East')
 title('Magnitude response')
 %% 3.IIR bandpass filtrs
-[b,a] = iirpeak(Wn1,2*(Wn2-Wn1),-22);     %Wo must satisfy 0.0 < Wo < 1.0, with 1.0 corresponding to pi radians/sample
-[h3,w3] = freqz(b,a);
-[b,a] = iirpeak(Wn2,2*(Wn2-Wn1),-19); 
-[h4,w4] = freqz(b,a);
+[bb1,aa1] = iirpeak(Wn1,2*(Wn2-Wn1),-22);     %Wo must satisfy 0.0 < Wo < 1.0, with 1.0 corresponding to pi radians/sample
+[h3,w3] = freqz(bb1,aa1);
+[bb2,aa2] = iirpeak(Wn2,2*(Wn2-Wn1),-19); 
+[h4,w4] = freqz(bb2,aa2);
 figure (2)
 plot (w3/pi,db(h3), ...
     w4/pi,db(h4),...

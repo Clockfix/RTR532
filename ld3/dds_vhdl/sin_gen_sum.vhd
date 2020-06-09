@@ -10,7 +10,7 @@
 --
 -- Revision:
 -- A - initial design
--- B - 
+-- B - add overflow and unferflow check
 --
 -----------------------------
 library ieee;					--always use this library
@@ -22,10 +22,10 @@ use ieee.numeric_std.all;		--use this library if arithmetic required
 entity sin_gen_sum is
     generic
     (
-        phase_width 						: integer := 9;
+        phase_width 						   : integer := 9;
         data_width							: integer := 16;
-        phase_incr_one                      : integer := 37;
-        phase_incr_two                      : integer := 57
+        phase_incr_one                 : integer := 37;
+        phase_incr_two                 : integer := 57
     );
     port
     (
@@ -99,16 +99,16 @@ port map
 	process(clk)
 	begin
         if rising_edge(clk) then
-                if ((std_logic(signal_out_one(data_width-1)) and std_logic(signal_out_two(data_width-1))) = '1' ) and
-                (signed(signal_out_one) + signed(signal_out_two) > x"0000" )
+                if ((std_logic(signal_out_one(data_width-1)) and std_logic(signal_out_two(data_width-1))) = '1' ) and	-- check is bouth numbers negative
+                (signed(signal_out_one) + signed(signal_out_two) > x"0000" )															-- check sum is positive
                                              then     --max negative
-                    signal_summ <= x"8000"; --overflow
-                else if (std_logic(signal_out_one(data_width-1)) nor std_logic(signal_out_two(data_width-1))) = '1' and
-                (signed(signal_out_one) + signed(signal_out_two) < x"0000" )
+                    signal_summ <= x"8000"; --underflow
+                else if (std_logic(signal_out_one(data_width-1)) nor std_logic(signal_out_two(data_width-1))) = '1' and	-- check is bouth numbers positive
+                (signed(signal_out_one) + signed(signal_out_two) < x"0000" )															-- check sum is negative
                                              then      --max positive
                     signal_summ <= x"7fff"; --overflow
                     else
-                    signal_summ <= signed(signal_out_one) + signed(signal_out_two);
+                    signal_summ <= signed(signal_out_one) + signed(signal_out_two);													-- noramal sum
                     end if; 
                 end if;
 		end if;
