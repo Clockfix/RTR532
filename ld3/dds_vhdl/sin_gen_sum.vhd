@@ -31,8 +31,6 @@ entity sin_gen_sum is
     (
         clk 								: in std_logic;	--100mhz clock
         rst									: in std_logic;	--rst
-        --phase_incr_one  					: in std_Logic_vector(phase_width - 1 downto 0); --"frequency for first signal"
-        --phase_incr_two  					: in std_Logic_vector(phase_width - 1 downto 0); --"frequency for second signal"
         signal_out							: out std_Logic_vector(data_width - 1 downto 0)
     );
     end sin_gen_sum;
@@ -42,8 +40,8 @@ architecture behavioral of sin_gen_sum is
     --define inside use signals
     signal signal_out_one					   : std_Logic_vector(data_width - 1 downto 0) := (others => '0');
     signal signal_out_two   					: std_Logic_vector(data_width - 1 downto 0) := (others => '0');
-	 signal signal_summ   						: std_Logic_vector(data_width downto 0) := (others => '0'); --  17bit word
-    
+	signal signal_summ   						: signed(data_width - 1 downto 0) := (others => '0'); --  17bit word
+     
     --define components to use
 	component sin_gen is
         generic
@@ -62,8 +60,9 @@ architecture behavioral of sin_gen_sum is
         end component;
 
 begin	--define the operation of the module!
-	--signal output 
-	signal_out <= std_logic_Vector(signal_summ(data_width  downto 1));
+    --signal output 
+    
+	signal_out <= std_logic_Vector(signal_summ);
 
 
 sin_gen_one : sin_gen 
@@ -99,8 +98,19 @@ port map
 	--adder
 	process(clk)
 	begin
-		if rising_edge(clk) then
-				signal_summ <= signed(signal_out_one) + signed(signal_out_two);
+        if rising_edge(clk) then
+                if ((std_logic(signal_out_one(data_width-1)) and std_logic(signal_out_two(data_width-1))) = '1' ) and
+                (signed(signal_out_one) + signed(signal_out_two) > x"0000" )
+                                             then     --max negative
+                    signal_summ <= x"8000"; --overflow
+                else if (std_logic(signal_out_one(data_width-1)) nor std_logic(signal_out_two(data_width-1))) = '1' and
+                (signed(signal_out_one) + signed(signal_out_two) < x"0000" )
+                                             then      --max positive
+                    signal_summ <= x"7fff"; --overflow
+                    else
+                    signal_summ <= signed(signal_out_one) + signed(signal_out_two);
+                    end if; 
+                end if;
 		end if;
 	end process;
 
