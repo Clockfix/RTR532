@@ -10,8 +10,8 @@ OutFracWidth : 28
 OutFullFracWidth : 28 
 nChans : 41 
 nTaps : 41 
-clockRate : 100 
-inRate : 100 
+clockRate : 0.02205 
+inRate : 0.02205 
 interpN : 1 
 decimN : 1 
 busDataWidth : 16 

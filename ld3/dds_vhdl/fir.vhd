@@ -83,9 +83,9 @@ end architecture rtl; -- of fir
 -- Retrieval info: 	<generic name="symmetryMode" value="nsym" />
 -- Retrieval info: 	<generic name="L_bandsFilter" value="1" />
 -- Retrieval info: 	<generic name="inputChannelNum" value="1" />
--- Retrieval info: 	<generic name="clockRate" value="100" />
+-- Retrieval info: 	<generic name="clockRate" value="0.02205" />
 -- Retrieval info: 	<generic name="clockSlack" value="0" />
--- Retrieval info: 	<generic name="inputRate" value="100" />
+-- Retrieval info: 	<generic name="inputRate" value="0.02205" />
 -- Retrieval info: 	<generic name="coeffReload" value="false" />
 -- Retrieval info: 	<generic name="baseAddress" value="0" />
 -- Retrieval info: 	<generic name="readWriteMode" value="read_write" />

@@ -26,9 +26,7 @@ entity sin_gen_sum is
     generic
     (
         phase_width                     : integer := 9;
-        data_width                      : integer := 16--;
-        --phase_incr_one                  : integer := 37;
-        --phase_incr_two                  : integer := 57
+        data_width                      : integer := 16
     );
     port
     (
@@ -42,65 +40,14 @@ entity sin_gen_sum is
 
 --define inside of the module
 architecture behavioral of sin_gen_sum is
-    --define inside use signals
-    --signal signal_out_one                   : std_Logic_vector(data_width - 1 downto 0) := (others => '0');
-    --signal signal_out_two                   : std_Logic_vector(data_width - 1 downto 0) := (others => '0');
-	signal signal_summ                      : signed(data_width - 1 downto 0) := (others => '0'); --  16bit word
+
+    signal signal_summ                      : signed(data_width - 1 downto 0) := (others => '0'); --  16bit word
      
-    --define components to use
-	-- component sin_gen is
-    --     generic
-    --     (
-    --         phase_width 						: integer := 9;
-    --         data_width							: integer := 16
-    --     );
-    --     port
-    --     (
-    --         clk 								: in std_logic;	--100mhz clock
-    --         rst									: in std_logic;	--rst
-    --         --phase_incr							: in std_Logic_vector(phase_width - 1 downto 0); --"frequency"
-    --         signal_f_one                        : out std_Logic_vector(data_width - 1 downto 0); --
-    --         signal_f_two                        : out std_Logic_vector(data_width - 1 downto 0);
-    --         --phase_out							: out std_Logic_vector(phase_width - 1 downto 0);
-    --         signal_out							: out std_Logic_vector(data_width - 1 downto 0)
-    --     );
-    --     end component;
 
 begin	--define the operation of the module!
     --signal output 
     
 	signal_out <= std_logic_Vector(signal_summ);
-
-
--- sin_gen_one : sin_gen 
--- generic map
--- (
---     phase_width 						=> phase_width,
---     data_width							=> data_width
--- )
--- port map
--- (
---     clk 							    	=> clk,
---     rst									=> rst,
---     phase_incr							=> std_logic_Vector(To_unsigned(phase_incr_one,phase_width)),
---     --phase_out						=> phase_out,
---     signal_out							=> signal_out_one
--- );
-
--- sin_gen_two : sin_gen 
--- generic map
--- (
---     phase_width 						=> phase_width,
---     data_width							=> data_width
--- )
--- port map
--- (
---     clk 							    	=> clk,
---     rst									=> rst,
---     phase_incr							=> std_logic_Vector(To_unsigned(phase_incr_two,phase_width)),
---     --phase_out						=> phase_out,
---     signal_out							=> signal_out_two
--- );
 
 	--adder
 	process(clk)

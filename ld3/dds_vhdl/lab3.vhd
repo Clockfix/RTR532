@@ -28,8 +28,8 @@ entity lab3 is
     (
         phase_width                     : integer := 9;
         data_width                      : integer := 16;
-        phase_incr_one                  : integer := 37;    -- 22050/1664
-        phase_incr_two                  : integer := 57;
+        phase_incr_one                  : integer := 37;    -- Ph_inc = (f_out * 2^(B_n))/f_clk
+        phase_incr_two                  : integer := 57;    -- 2496 * 2^9 / 22050
         sampling_f						: integer := 4535;	-- 100MHz/22050
 	    clock_cnt_width					: integer := 13
     );
@@ -45,8 +45,9 @@ architecture behavioral of lab3 is
     --define inside use signals
     signal signal_f_one                   : std_Logic_vector(data_width - 1 downto 0) := (others => '0');
     signal signal_f_two                   : std_Logic_vector(data_width - 1 downto 0) := (others => '0');
-	 signal signal_sum                     : std_Logic_vector(data_width - 1 downto 0) := (others => '0');
-	 signal clk_22050                      : std_Logic := '0';    
+	signal signal_sum                     : std_Logic_vector(data_width - 1 downto 0) := (others => '0');
+	signal clk_22050                      : std_Logic := '0'; 
+	signal not_rst                        : std_Logic := '1';  
 
     --define components to use
 	component sin_gen is
@@ -110,6 +111,9 @@ architecture behavioral of lab3 is
 
 
 begin	--define the operation of the module!
+
+not_rst <= std_logic(not rst);
+
 
 sin_gen_one : sin_gen   -- first signal generator
 generic map
@@ -176,14 +180,14 @@ port map
 fir_one : fir    -- FIR filter from Altera Megawizard plugin IP Core
 port map
 ( 
-				clk                               =>  clk,           --  clk.clk
-            reset_n                                =>  rst,          --  rst.reset_n
-            ast_sink_data                               => signal_sum,--   avalon_streaming_sink.data
-            ast_sink_valid                               =>   '1',         --  .valid
-            ast_sink_error                                  => "00"  -- .error
-         --   ast_source_data                                 =>                    -- avalon_streaming_source.data
-         --   ast_source_valid                                =>                                    --    .valid
-         --   ast_source_error                                =>                     --   .error
+				clk                               =>  clk_22050,			 	--  clk.clk
+            reset_n                           =>  not_rst,   				--  rst.reset_n
+            ast_sink_data                     =>  signal_sum,				--   avalon_streaming_sink.data
+            ast_sink_valid                    =>  '1',         			--  .valid
+            ast_sink_error                    =>  "00"  						-- .error (00: No error)
+         --   ast_source_data                                 =>           -- avalon_streaming_source.data
+         --   ast_source_valid                                =>           --    .valid
+         --   ast_source_error                                =>           --   .error
 );
 
 
