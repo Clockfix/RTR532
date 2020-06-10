@@ -24,10 +24,10 @@ entity sin_gen_sum_tb is
     (
         phase_width 						: integer := 9;
         data_width							: integer := 16;
-	    phase_incr_one                      : integer := 37;
+	phase_incr_one                      : integer := 37;
         phase_incr_two                      : integer := 57;
         sampling_f					: integer := 4535;	-- 100MHz/22050Hz
-	    clock_cnt_width				: integer := 13
+	clock_cnt_width				: integer := 13
     );
     end sin_gen_sum_tb;
 
@@ -43,7 +43,7 @@ architecture behavioral of sin_gen_sum_tb is
         signal clk 									: std_logic := '0';	--100mhz clock
         signal rst									: std_logic := '0';	--rst
         signal signal_out							: std_Logic_vector(data_width - 1 downto 0) := (others => '0');
-	    signal clk_22050                      : std_Logic := '0'; 
+	signal clk_22050                      : std_Logic := '0'; 
 
     --define components to use
     component sin_gen_sum is
@@ -69,7 +69,7 @@ architecture behavioral of sin_gen_sum_tb is
             data_width                  : integer := 16;
             
             sampling_f					: integer := 4535;	-- 100MHz/22050Hz
-	        clock_cnt_width				: integer := 13
+	    clock_cnt_width				: integer := 13
         );
         port
         (

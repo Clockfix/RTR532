@@ -1,0 +1,132 @@
+# Compile of dds_vhdl.vhd was successful.
+# Compile of dds_vhdl_tb.vhd was successful with warnings.
+# 2 compiles, 0 failed with no errors.
+vsim -gui work.dds_vhdl_tb
+# vsim -gui work.dds_vhdl_tb 
+# Start time: 20:04:05 on Jun 08,2020
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading work.dds_vhdl_tb(behavioral)
+# Loading work.dds_vhdl(behavioral)
+run
+restart
+add wave -position insertpoint  \
+sim:/dds_vhdl_tb/clk
+add wave -position insertpoint  \
+sim:/dds_vhdl_tb/rst
+add wave -position insertpoint  \
+sim:/dds_vhdl_tb/phase_incr
+add wave -position insertpoint  \
+sim:/dds_vhdl_tb/phase_out
+add wave -position insertpoint  \
+sim:/dds_vhdl_tb/signal_out
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+run
+# Compile of dds_vhdl_tb.vhd was successful with warnings.
+run
+run
+run
+restart
+# Loading work.dds_vhdl_tb(behavioral)
+run
+# Compile of dds_vhdl_tb.vhd was successful with warnings.
+restart
+# Loading work.dds_vhdl_tb(behavioral)
+run
+restart
+run
+run
+add wave -position end  sim:/dds_vhdl_tb/signal_out
+run

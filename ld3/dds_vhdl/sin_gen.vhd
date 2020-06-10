@@ -22,7 +22,7 @@ use ieee.numeric_std.all;		--use this library if arithmetic required
 entity sin_gen is
 generic
 (
-	phase_width 						: integer := 9;
+	phase_width							: integer := 9;
 	data_width							: integer := 16;
 	sampling_f							: integer := 4535;	-- 100MHz/22050
 	clock_cnt_width						: integer := 13
@@ -566,7 +566,7 @@ architecture behavioral of sin_gen is
 	-- clock divider counter - for generating 22050Hz  fs clock
 	signal clock_cnt : unsigned(clock_cnt_width - 1 downto 0) := (others => '0');
 	-- clock output
-	signal clock_out : std_logic := '0';
+	signal clock_out : std_logic := '1';
 
 begin	--define the operation of the module!
 	
@@ -585,9 +585,9 @@ begin	--define the operation of the module!
 			else
 				if  clock_cnt <= sampling_f then
 					clock_cnt <= unsigned(clock_cnt) + 1;
-					--if clock_cnt = (sampling_f-1)/2 then
-					--	clock_out <= not clock_out;
-					--end if;
+					if clock_cnt = (sampling_f-1)/2 then
+						clock_out <= not clock_out;
+					end if;
 				else
 					phase_cnt <= unsigned(phase_cnt) + unsigned(phase_incr);
 					clock_cnt <= (others => '0');

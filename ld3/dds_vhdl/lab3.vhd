@@ -28,8 +28,8 @@ entity lab3 is
     (
         phase_width                     : integer := 9;
         data_width                      : integer := 16;
-        phase_incr_one                  : integer := 37;    -- Ph_inc = (f_out * 2^(B_n))/f_clk
-        phase_incr_two                  : integer := 57;    -- 2496 * 2^9 / 22050
+        phase_incr_one                  : integer := 37;    -- 22050/1664
+        phase_incr_two                  : integer := 57;
         sampling_f						: integer := 4535;	-- 100MHz/22050
 	    clock_cnt_width					: integer := 13
     );
@@ -45,9 +45,9 @@ architecture behavioral of lab3 is
     --define inside use signals
     signal signal_f_one                   : std_Logic_vector(data_width - 1 downto 0) := (others => '0');
     signal signal_f_two                   : std_Logic_vector(data_width - 1 downto 0) := (others => '0');
-	signal signal_sum                     : std_Logic_vector(data_width - 1 downto 0) := (others => '0');
-	signal clk_22050                      : std_Logic := '0'; 
-	signal not_rst                        : std_Logic := '1';  
+	 signal signal_sum                     : std_Logic_vector(data_width - 1 downto 0) := (others => '0');
+	 signal clk_22050                      : std_Logic := '0'; 
+	 signal not_rst                        : std_Logic := '1';  
 
     --define components to use
 	component sin_gen is
